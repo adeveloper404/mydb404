@@ -614,6 +614,30 @@
                 gap: 1.5rem;
             }
         }
+
+        /* --- TRIK SMART ZOOM JADWAL UNTUK LAYAR HP --- */
+        @media (max-width: 768px) {
+            .table-wrapper-large {
+                padding: 0.5rem;
+                overflow-x: auto; /* Mengaktifkan scroll jika masih ada sisa */
+                display: block;   /* Mengubah flexbox menjadi block agar scroll lancar */
+            }
+            
+            .embed-responsive-container {
+                width: 100%;
+                overflow: hidden;
+            }
+
+            .table-wrapper-large iframe {
+                /* Memaksa Google Sheet mengecil agar muat di layar HP */
+                width: 140% !important; 
+                min-width: 140% !important;
+                transform: scale(0.7); /* MEMBUAT EFEK ZOOM OUT INTERNAL 70% */
+                transform-origin: top left; /* Mengunci posisi di pojok kiri atas */
+                height: 700px; /* Menambah tinggi kompensasi akibat efek scale */
+                margin-bottom: -210px; /* Memotong sisa space kosong akibat scale */
+            }
+        }
     </style>
 </head>
 <body>
@@ -723,10 +747,20 @@
                 <div class="sync-badge"><i class="fa-solid fa-arrows-rotate"></i> Live Sheet Connected</div>
             </div>
             
+            <div style="margin-bottom: 1rem; text-align: right;">
+                <a href="https://docs.google.com/spreadsheets/d/17FG-LGYgjZO6K6sXi0b-yqLfUwt_32PN9T-cu1wX2do/edit?gid=1346901625#gid=1346901625" 
+                   target="_blank" 
+                   class="jurnal-item-btn" 
+                   style="display: inline-flex; width: auto; gap: 0.5rem; padding: 0.6rem 1.2rem; font-size: 0.85rem; border-color: var(--accent-green);">
+                    <i class="fa-solid fa-up-right-from-square" style="color: var(--accent-green);"></i> 
+                    <span style="color: var(--text-main);">Buka Jadwal Fullscreen</span>
+                </a>
+            </div>
+            
             <div class="table-wrapper-large">
                 <div class="embed-responsive-container">
                     <iframe 
-                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT3j0fxRzQPxG8PKmcfbySR0VcEqnv3u00BD9HYB24okoU_Zvti0Ok52Gn8RE7R3l4HFgbEW_RMjFsl/pubhtml?gid=1346901625&amp;single=true&amp;widget=false&amp;headers=false&amp;chrome=false">
+                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT3j0fxRzQPxG8PKmcfbySR0VcEqnv3u00BD9HYB24okoU_Zvti0Ok52Gn8RE7R3l4HFgbEW_RMjFsl/pubhtml?gid=1346901625&single=true&widget=false&headers=false&chrome=false">
                     </iframe>
                 </div>
             </div>
