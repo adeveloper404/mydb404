@@ -411,37 +411,46 @@
 
         /* Wrapper Container Modifikasi untuk Tampilan Google Sheets */
         .table-wrapper-large {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    overflow-x: auto;
-    box-shadow: 0 10px 25px -5px var(--shadow);
-    
-    /* --- TAMBAHKAN 3 BARIS DI BAWAH INI UNTUK MEMBUAT IFRAME DI TENGAH --- */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+            
+            /* Gunakan padding agar jarak bingkai lebih rapi */
+            padding: 1rem; 
+            
+            /* Tetap membuat iframe berada di tengah pada layar desktop */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            /* Mencegah pemotongan paksa pada resolusi kecil */
+            overflow: hidden; 
+        }
 
         /* Pembungkus Tambahan agar Pengguna HP bisa Scroll Samping dengan Mulus */
         .embed-responsive-container {
             width: 100%;
-            height: 10%;
+            /* REVISI: Ubah dari height: 10% menjadi auto agar flexbox tidak merusak scroll */
+            height: auto; 
+            
+            /* Mengaktifkan fungsi geser horizontal khusus perangkat layar sentuh */
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
-            border-radius: 18px;
+            border-radius: 14px;
         }
 
-        /* Styling Iframe yang Diperbagus Khusus */
+        /* Styling Iframe Google Sheets */
         .table-wrapper-large iframe {
             width: 100%;
-            min-width: 950px; /* Mencegah tabel menciut hancur, memaksa scroll horizontal yang rapi */
+            /* Mengunci batas lebar minimal agar struktur tabel tetap utuh dan memicu scroll di HP */
+            min-width: 950px; 
             height: 520px;
             border: none;
             display: block;
-            border-radius: 18px;
+            border-radius: 14px;
             background-color: #ffffff;
-            filter: var(--sheet-invert); /* Menyesuaikan otomatis warna sheet berdasarkan tema dark/light */
+            filter: var(--sheet-invert); 
             transition: filter 0.3s ease;
         }
 
