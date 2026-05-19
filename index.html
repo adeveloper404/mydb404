@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adeveloper - My Dashboard</title>
+    <link rel="icon" type="image/png" href="https://uc.googleusercontent.com/export=download&id=1tb7sFpCdE-jivYf4audtkAOg98paEctJ">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VARIABEL TEMA WARNA (PERBAIKAN KONTRAS LIGHT MODE) --- */
+        :root[data-theme="dark"] {
+            --bg-primary: #0f172a;        /* Navy gelap (Gambar 2) */
+            --bg-secondary: #1e293b;      /* Card & Sidebar bg */
+            --bg-accent: #334155;
+            --text-main: #f8fafc;         /* Putih utama */
+            --text-muted: #94a3b8;        /* Abu-abu teks */
+            --accent-purple: #6366f1;     /* Tema Foundation */
+            --accent-green: #10b981;      /* Tema Builder */
+            --accent-orange: #f59e0b;     /* Tema Specialist */
+            --border-color: rgba(255, 255, 255, 0.08);
+            --shadow: rgba(0, 0, 0, 0.4);
+            --table-header-bg: #1e293b;
+            --table-row-hover: rgba(255, 255, 255, 0.02);
+            --sheet-invert: invert(0.9) hue-rotate(180deg); /* Filter otomatis agar Google Sheet menjadi Dark Mode */
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #f1f5f9;        /* Diubah ke Soft Gray (Gambar 3) agar Card Putih Terlihat Jelas */
+            --bg-secondary: #ffffff;      /* Card murni putih (terlihat pop-out di atas bg-primary) */
+            --bg-accent: #e2e8f0;         /* Tombol & track slider lebih gelap sedikit */
+            --text-main: #0f172a;         /* Teks utama gelap pekat */
+            --text-muted: #475569;        /* Teks pendukung lebih kontras (Slate-600) */
+            --accent-purple: #4f46e5;     
+            --accent-green: #059669;      
+            --accent-orange: #d97706;     
+            --border-color: rgba(15, 23, 42, 0.12); /* Border lebih tegas */
+            --shadow: rgba(15, 23, 42, 0.08);       /* Bayangan card lebih lembut tapi nyata */
+            --table-header-bg: #f8fafc;
+            --table-row-hover: #f8fafc;
+            --sheet-invert: none;                   /* Google Sheet kembali normal di Light Mode */
+        }
+
+        /* --- RESET & GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        /* Compatibility: define the standard property after vendor-prefixed background-clip */
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-green));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- SECTION STYLING --- */
+        section {
+            padding: 4rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 6px -1px var(--shadow);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .brand {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .brand span {
+            color: var(--accent-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--text-main);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-purple);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-accent);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: translateY(-2px);
+            background: var(--border-color);
+        }
+
+        /* --- TOP SECTION: DASHBOARD HERO & CATATAN --- */
+        .top-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .hero-clock-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+            text-align: center;
+        }
+
+        .hero-clock-card h1 {
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .digital-clock-wrapper {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem 2rem; /* Dikurangi sedikit padding sampingnya agar proporsional */
+            border-radius: 20px;
+            width: 100%; /* Memaksa wrapper mengikuti ukuran fix box utama */
+            box-sizing: border-box;
+        }
+
+        #digital-clock {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-main);
+        }
+
+        /* Kotak Catatan */
+        .notes-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .notes-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notes-card h3 i {
+            color: var(--accent-orange);
+        }
+
+        .table-container-mini {
+            overflow-y: auto;
+            flex-grow: 1;
+            max-height: 180px;
+        }
+
+        .sheet-table-mini {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .sheet-table-mini th {
+            background: var(--bg-primary);
+            color: var(--text-muted);
+            padding: 0.6rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+        }
+
+        .sheet-table-mini td {
+            padding: 0.6rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        /* --- ROW SLIDER / CAROUSEL PILIHAN --- */
+        .carousel-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .carousel-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: absolute;
+            z-index: 10;
+        }
+
+        .carousel-btn.left { left: -22px; }
+        .carousel-btn.right { right: -22px; }
+
+        .carousel-btn:hover {
+            background: var(--accent-purple);
+            color: #ffffff;
+            transform: scale(1.1);
+            border-color: var(--accent-purple);
+        }
+
+        .grid-container-scroll {
+            display: flex;
+            gap: 1.25rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 0.5rem 0;
+            width: 100%;
+        }
+
+        .grid-container-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu-card {
+            min-width: 185px;
+            flex: 0 0 auto;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.75rem 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+            box-shadow: 0 4px 6px -1px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-card i {
+            font-size: 1.75rem;
+            padding: 0.85rem;
+            border-radius: 14px;
+        }
+
+        /* Pewarnaan Icon disesuaikan agar kontras tinggi di Light Mode */
+        .menu-card.purple i { color: var(--accent-purple); background: rgba(79, 70, 229, 0.08); }
+        .menu-card.green i { color: var(--accent-green); background: rgba(5, 150, 105, 0.08); }
+        .menu-card.orange i { color: var(--accent-orange); background: rgba(217, 119, 6, 0.08); }
+
+        :root[data-theme="light"] .menu-card.purple i { background: rgba(79, 70, 229, 0.12); }
+        :root[data-theme="light"] .menu-card.green i { background: rgba(5, 150, 105, 0.12); }
+        :root[data-theme="light"] .menu-card.orange i { background: rgba(217, 119, 6, 0.12); }
+
+        .menu-card p {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: capitalize;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -3px var(--shadow);
+            border-color: var(--accent-purple);
+        }
+
+        .menu-card.empty {
+            border: 2px dashed var(--border-color);
+            background: rgba(15, 23, 42, 0.02);
+            box-shadow: none;
+            justify-content: center;
+        }
+        :root[data-theme="dark"] .menu-card.empty { background: transparent; }
+        .menu-card.empty i { color: var(--text-muted); background: transparent; }
+
+        /* --- PERBAIKAN DAN SINKRONISASI SECTION JADWAL MENGAJAR --- */
+        .section-header {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 4px;
+            background: var(--accent-purple);
+            border-radius: 2px;
+        }
+
+        .sync-badge {
+            font-size: 0.8rem;
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--accent-green);
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Wrapper Container Modifikasi untuk Tampilan Google Sheets */
+        .table-wrapper-large {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    overflow-x: auto;
+    box-shadow: 0 10px 25px -5px var(--shadow);
+    
+    /* --- TAMBAHKAN 3 BARIS DI BAWAH INI UNTUK MEMBUAT IFRAME DI TENGAH --- */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+        /* Pembungkus Tambahan agar Pengguna HP bisa Scroll Samping dengan Mulus */
+        .embed-responsive-container {
+            width: 100%;
+            height: 10%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 18px;
+        }
+
+        /* Styling Iframe yang Diperbagus Khusus */
+        .table-wrapper-large iframe {
+            width: 100%;
+            min-width: 950px; /* Mencegah tabel menciut hancur, memaksa scroll horizontal yang rapi */
+            height: 520px;
+            border: none;
+            display: block;
+            border-radius: 18px;
+            background-color: #ffffff;
+            filter: var(--sheet-invert); /* Menyesuaikan otomatis warna sheet berdasarkan tema dark/light */
+            transition: filter 0.3s ease;
+        }
+
+        /* Hint petunjuk geser tabel di mobile phone */
+        .scroll-hint {
+            display: none;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        /* --- SECTION ABOUT WITH PHOTO --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .about-text p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+
+        .photo-frame {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+            position: relative;
+            overflow: hidden;
+            color: var(--text-muted);
+        }
+
+        .photo-frame i {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-purple);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* --- RESPONSIVITAS DEVICE --- */
+        @media (max-width: 992px) {
+            .top-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .photo-frame { max-width: 250px; margin: 0 auto; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .nav-links { display: none; }
+            #digital-clock { font-size: 2.5rem; }
+            .carousel-btn { display: none; }
+            .grid-container-scroll { padding: 0.5rem 5px; }
+            .scroll-hint { display: block; }
+        }
+
+        /* --- SECTION JURNAL KELAS (BARU) --- */
+        .jurnal-grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .jurnal-column-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: 0 10px 25px -5px var(--shadow);
+        }
+
+        .jurnal-column-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        /* Variasi warna ikon header tingkatan kelas */
+        .jurnal-column-card:nth-child(1) h3 i { color: var(--accent-purple); }
+        .jurnal-column-card:nth-child(2) h3 i { color: var(--accent-green); }
+        .jurnal-column-card:nth-child(3) h3 i { color: var(--accent-orange); }
+
+        .jurnal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .jurnal-item-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .jurnal-item-btn i {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        /* Efek Hover Keren */
+        .jurnal-item-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-purple);
+            box-shadow: 0 6px 15px var(--shadow);
+            background: var(--bg-accent);
+        }
+
+        .jurnal-item-btn:hover i {
+            color: var(--accent-purple);
+            transform: translateX(4px);
+        }
+
+        /* Responsif untuk HP (Menjadi 1 Kolom jika layar kecil) */
+        @media (max-width: 992px) {
+            .jurnal-grid-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container navbar">
+            <div class="brand">Adevel<span>oper</span></div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-item active">Home</a></li>
+                <li><a href="#jadwal" class="nav-item">Jadwal Mengajar</a></li>
+                <li><a href="#jurnal-kelas" class="nav-item">Jurnal Kelas</a></li>
+                <li><a href="#about" class="nav-item">About</a></li>
+            </ul>
+            <div class="header-actions">
+                <button class="theme-toggle-btn" id="themeToggle" title="Ganti Tema">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" id="home">
+        <div class="top-grid">
+            <div class="hero-clock-card">
+                <h1>My Dashboard</h1>
+                <div class="digital-clock-wrapper">
+                    <div id="digital-clock">00 : 00 : 00</div>
+                    <div id="digital-date" style="font-size: 1rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; letter-spacing: 1px; text-transform: uppercase;">Selasa, 19 Mei 2026</div>
+                </div>
+            </div>
+            
+            <div class="notes-card">
+                <h3><i class="fa-solid fa-thumbtack"></i> Catatan</h3>
+                <div class="table-container-mini">
+                    <table class="sheet-table-mini" id="table-catatan">
+                        <thead>
+                            <tr>
+                                <th>Agenda</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Input Nilai Jurnal Kelas X</td>
+                                <td style="color: var(--accent-orange); font-weight:600;">Pending</td>
+                            </tr>
+                            <tr>
+                                <td>Upload Materi Web Design</td>
+                                <td style="color: var(--accent-green); font-weight:600;">Selesai</td>
+                            </tr>
+                            <tr>
+                                <td>Rapat Evaluasi Kurikulum</td>
+                                <td style="color: var(--text-muted); font-weight:600;">Esok Hari</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-wrapper">
+            <button class="carousel-btn left" id="slideLeft"><i class="fa-solid fa-chevron-left"></i></button>
+            
+            <div class="grid-container-scroll" id="carouselContainer">
+                <a href="#jadwal" class="menu-card purple">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <p>jadwal ngajar</p>
+                </a>
+                <a href="#" class="menu-card green">
+                    <i class="fa-solid fa-book-open"></i>
+                    <p>web materi</p>
+                </a>
+                <a href="#jurnal-kelas" class="menu-card orange">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <p>jurnal kelas x</p>
+                </a>
+                <a href="#jurnal-kelas" class="menu-card orange">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <p>jurnal kelas xi</p>
+                </a>
+                <a href="#jurnal-kelas" class="menu-card orange">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <p>jurnal kelas xii</p>
+                </a>
+                <a href="#" class="menu-card purple">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <p>drive siswa</p>
+                </a>
+                <a href="#" class="menu-card green">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <p>Sheet Dashboard</p>
+                </a>
+                
+                <div class="menu-card empty"><i class="fa-solid fa-plus"></i></div>
+                <div class="menu-card empty"><i class="fa-solid fa-plus"></i></div>
+                <div class="menu-card empty"><i class="fa-solid fa-plus"></i></div>
+            </div>
+            
+            <button class="carousel-btn right" id="slideRight"><i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+    </main>
+
+    <section id="jadwal">
+        <div class="container">
+            <div class="section-header">
+                <h2>Jadwal Mengajar</h2>
+                <div class="sync-badge"><i class="fa-solid fa-arrows-rotate"></i> Live Sheet Connected</div>
+            </div>
+            
+            <div class="table-wrapper-large">
+                <div class="embed-responsive-container">
+                    <iframe 
+                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT3j0fxRzQPxG8PKmcfbySR0VcEqnv3u00BD9HYB24okoU_Zvti0Ok52Gn8RE7R3l4HFgbEW_RMjFsl/pubhtml?gid=1346901625&amp;single=true&amp;widget=false&amp;headers=false&amp;chrome=false">
+                    </iframe>
+                </div>
+            </div>
+            <div class="scroll-hint"><i class="fa-solid fa-hand-pointer"></i> Geser ke samping untuk melihat hari Jumat</div>
+        </div>
+    </section>
+
+    <section id="jurnal-kelas">
+        <div class="container">
+            <div class="section-header">
+                <h2>Jurnal Kelas</h2>
+                <div class="sync-badge"><i class="fa-solid fa-folder-tree"></i> E-Jurnal System</div>
+            </div>
+
+            <div class="jurnal-grid-container">
+                <div class="jurnal-column-card">
+                    <h3><i class="fa-solid fa-graduation-cap"></i> Kelas X Merdeka</h3>
+                    <div class="jurnal-list">
+                        <a href="#" class="jurnal-item-btn"><span>X Merdeka 1</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>X Merdeka 2</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>X Merdeka 3</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>X Merdeka 4</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>X Merdeka 5</span><i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="jurnal-column-card">
+                    <h3><i class="fa-solid fa-graduation-cap"></i> Kelas XI Merdeka</h3>
+                    <div class="jurnal-list">
+                        <a href="#" class="jurnal-item-btn"><span>XI Merdeka 1</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XI Merdeka 2</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XI Merdeka 3</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XI Merdeka 4</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XI Merdeka 5</span><i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="jurnal-column-card">
+                    <h3><i class="fa-solid fa-graduation-cap"></i> Kelas XII Merdeka</h3>
+                    <div class="jurnal-list">
+                        <a href="#" class="jurnal-item-btn"><span>XII Merdeka 1</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XII Merdeka 2</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XII Merdeka 3</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XII Merdeka 4</span><i class="fa-solid fa-chevron-right"></i></a>
+                        <a href="#" class="jurnal-item-btn"><span>XII Merdeka 5</span><i class="fa-solid fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container about-grid">
+            <div class="about-text">
+                <h2>About</h2>
+                <p style="margin-bottom: 1.25rem;">Website dashboard ini merupakan platform digital modern yang dirancang untuk membantu pengelolaan aktivitas pembelajaran dan administrasi secara lebih terstruktur, cepat, dan efisien. Desain antarmuka dibuat minimalis, elegan, dan interaktif sehingga nyaman digunakan baik melalui desktop maupun perangkat mobile. Dashboard ini dilengkapi dengan fitur jadwal mengajar terintegrasi Google Sheets, jurnal kelas untuk jenjang X, XI, dan XII, catatan aktivitas, menu akses cepat, serta tampilan responsif dengan dukungan mode gelap dan terang.</p>
+                <p>Sistem ini dikembangkan oleh Adeveloper (@Adeveloper) sebagai solusi dashboard edukasi modern yang menggabungkan manajemen data, monitoring kegiatan belajar, dan kemudahan akses informasi dalam satu halaman website terintegrasi.</p>
+            </div>
+            <div class="photo-frame" style="padding: 0; overflow: hidden; border: 1px solid var(--border-color);">
+                <img src="https://lh3.googleusercontent.com/d/1zrgueA4qU2VaK14X8_pBng5gyxWe4V2q" 
+                     alt="Foto Adeveloper" 
+                     style="width: 100%; height: 100%; object-fit: cover; display: block;"
+                     referrerpolicy="no-referrer">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 @Adeveloper. Dashboard System V.1.1.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Clock
+        // Fungsi Update Jam dan Tanggal Otomatis
+        function runClock() {
+            const time = new Date();
+            
+            // 1. Logika Pengolah Waktu (Jam, Menit, Detik)
+            const hh = String(time.getHours()).padStart(2, '0');
+            const mm = String(time.getMinutes()).padStart(2, '0');
+            const ss = String(time.getSeconds()).padStart(2, '0');
+            document.getElementById('digital-clock').innerText = `${hh} : ${mm} : ${ss}`;
+            
+            // 2. Logika Pengolah Tanggal Indonesia
+            const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const hari = daftarHari[time.getDay()];
+            const tanggal = time.getDate();
+            const bulan = daftarBulan[time.getMonth()];
+            const tahun = time.getFullYear();
+            
+            // Gabungkan menjadi format teks
+            document.getElementById('digital-date').innerText = `${hari}, ${tanggal} ${bulan} ${tahun}`;
+        }
+        setInterval(runClock, 1000);
+        runClock();
+
+        // Switch Theme Logic
+        const toggleBtn = document.getElementById('themeToggle');
+        const rootElement = document.documentElement;
+
+        toggleBtn.addEventListener('click', () => {
+            const activeTheme = rootElement.getAttribute('data-theme');
+            if (activeTheme === 'dark') {
+                rootElement.setAttribute('data-theme', 'light');
+                toggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            } else {
+                rootElement.setAttribute('data-theme', 'dark');
+                toggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        });
+
+        // Carousel Slider
+        const containerScroll = document.getElementById('carouselContainer');
+        document.getElementById('slideLeft').addEventListener('click', () => {
+            containerScroll.scrollLeft -= 200;
+        });
+        document.getElementById('slideRight').addEventListener('click', () => {
+            containerScroll.scrollLeft += 200;
+        });
+
+        // Navigation Highlight Link
+        const navigationLinks = document.querySelectorAll('.nav-links a');
+        const systemSections = document.querySelectorAll('section, main');
+
+        window.addEventListener('scroll', () => {
+            let currentActiveSection = '';
+            systemSections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) {
+                    currentActiveSection = section.getAttribute('id');
+                }
+            });
+
+            navigationLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(currentActiveSection)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
