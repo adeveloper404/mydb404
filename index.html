@@ -671,7 +671,18 @@
             </div>
             
             <div class="notes-card">
-                <h3><i class="fa-solid fa-thumbtack"></i> Catatan</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="margin: 0;"><i class="fa-solid fa-thumbtack"></i> Catatan</h3>
+                    
+                    <a href="https://docs.google.com/spreadsheets/d/17FG-LGYgjZO6K6sXi0b-yqLfUwt_32PN9T-cu1wX2do/edit?gid=275032825#gid=275032825" 
+                       target="_blank" 
+                       class="jurnal-item-btn" 
+                       style="display: inline-flex; width: auto; gap: 0.4rem; padding: 0.4rem 0.8rem; font-size: 0.75rem; border-color: var(--accent-orange); margin: 0;">
+                        <i class="fa-solid fa-pen-to-square" style="color: var(--accent-orange); font-size: 0.75rem; padding: 0; background: transparent;"></i> 
+                        <span style="color: var(--text-main);">Edit</span>
+                    </a>
+                </div>
+
                 <div class="table-container-mini">
                     <table class="sheet-table-mini" id="table-catatan">
                         <thead>
@@ -680,18 +691,9 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="body-catatan">
                             <tr>
-                                <td>Input Nilai Jurnal Kelas X</td>
-                                <td style="color: var(--accent-orange); font-weight:600;">Pending</td>
-                            </tr>
-                            <tr>
-                                <td>Upload Materi Web Design</td>
-                                <td style="color: var(--accent-green); font-weight:600;">Selesai</td>
-                            </tr>
-                            <tr>
-                                <td>Rapat Evaluasi Kurikulum</td>
-                                <td style="color: var(--text-muted); font-weight:600;">Esok Hari</td>
+                                <td colspan="2" style="text-align: center; color: var(--text-muted);">Memuat data...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -905,6 +907,55 @@
                     link.classList.add('active');
                 }
             });
+        });
+
+        // --- LOGIKA MEMANGGIL DATA SPREADSHEET CATATAN ---
+        function loadCatatanFromSheet() {
+            const tbody = document.getElementById('body-catatan');
+            
+            // Memanggil fungsi Backend getCatatanData() yang ada di Kode.gs
+            google.script.run
+                .withSuccessHandler(function(data) {
+                    // Kosongkan tulisan "Memuat data..."
+                    tbody.innerHTML = '';
+                    
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted);">Tidak ada catatan.</td></tr>';
+                        return;
+                    }
+                    
+                    // Looping data dari Google Sheet ke dalam baris tabel
+                    data.forEach(item => {
+                        const tr = document.createElement('tr');
+                        
+                        // Logika pewarnaan otomatis berdasarkan kata status
+                        let statusStyle = 'color: var(--text-muted); font-weight:600;'; // Default abu-abu
+                        const statusLower = item.status.toString().toLowerCase();
+                        
+                        if (statusLower === 'done') {
+                            statusStyle = 'color: var(--accent-green); font-weight:600;';
+                        } else if (statusLower === 'pending' || statusLower === 'proses') {
+                            statusStyle = 'color: var(--accent-orange); font-weight:600;';
+                        }
+                        
+                        tr.innerHTML = `
+                            <td>${item.agenda}</td>
+                            <td style="${statusStyle}">${item.status}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .withFailureHandler(function(error) {
+                    tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
+                    console.error('Error GAS:', error);
+                })
+                .getCatatanData();
+        }
+
+        // Jalankan fungsi saat halaman web pertama kali dibuka
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCatatanFromSheet();
+            // Anda juga bisa menjalankan fungsi jam atau carousel Anda di sini
         });
     </script>
 </body>
