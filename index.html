@@ -2,7 +2,7 @@
 <html lang="id" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1200">
     <title>Adeveloper - My Dashboard</title>
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1tb7sFpCdE-jivYf4audtkAOg98paEctJ">
     <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1tb7sFpCdE-jivYf4audtkAOg98paEctJ">
@@ -207,9 +207,9 @@
         .digital-clock-wrapper {
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
-            padding: 1.5rem 2rem; /* Dikurangi sedikit padding sampingnya agar proporsional */
+            padding: 1.5rem 2rem; 
             border-radius: 20px;
-            width: 100%; /* Memaksa wrapper mengikuti ukuran fix box utama */
+            width: 100%; 
             box-sizing: border-box;
         }
 
@@ -345,7 +345,6 @@
             border-radius: 14px;
         }
 
-        /* Pewarnaan Icon disesuaikan agar kontras tinggi di Light Mode */
         .menu-card.purple i { color: var(--accent-purple); background: rgba(79, 70, 229, 0.08); }
         .menu-card.green i { color: var(--accent-green); background: rgba(5, 150, 105, 0.08); }
         .menu-card.orange i { color: var(--accent-orange); background: rgba(217, 119, 6, 0.08); }
@@ -375,7 +374,7 @@
         :root[data-theme="dark"] .menu-card.empty { background: transparent; }
         .menu-card.empty i { color: var(--text-muted); background: transparent; }
 
-        /* --- PERBAIKAN DAN SINKRONISASI SECTION JADWAL MENGAJAR --- */
+        /* --- SECTION JADWAL MENGAJAR --- */
         .section-header {
             margin-bottom: 2rem;
             display: flex;
@@ -412,41 +411,28 @@
             gap: 0.4rem;
         }
 
-        /* Wrapper Container Modifikasi untuk Tampilan Google Sheets */
         .table-wrapper-large {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 20px;
             box-shadow: 0 10px 25px -5px var(--shadow);
-            
-            /* Gunakan padding agar jarak bingkai lebih rapi */
             padding: 1rem; 
-            
-            /* Tetap membuat iframe berada di tengah pada layar desktop */
             display: flex;
             justify-content: center;
             align-items: center;
-            
-            /* Mencegah pemotongan paksa pada resolusi kecil */
             overflow: hidden; 
         }
 
-        /* Pembungkus Tambahan agar Pengguna HP bisa Scroll Samping dengan Mulus */
         .embed-responsive-container {
             width: 100%;
-            /* REVISI: Ubah dari height: 10% menjadi auto agar flexbox tidak merusak scroll */
             height: auto; 
-            
-            /* Mengaktifkan fungsi geser horizontal khusus perangkat layar sentuh */
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             border-radius: 14px;
         }
 
-        /* Styling Iframe Google Sheets */
         .table-wrapper-large iframe {
             width: 100%;
-            /* Mengunci batas lebar minimal agar struktur tabel tetap utuh dan memicu scroll di HP */
             min-width: 950px; 
             height: 520px;
             border: none;
@@ -457,7 +443,6 @@
             transition: filter 0.3s ease;
         }
 
-        /* Hint petunjuk geser tabel di mobile phone */
         .scroll-hint {
             display: none;
             font-size: 0.75rem;
@@ -522,23 +507,7 @@
             font-weight: 500;
         }
 
-        /* --- RESPONSIVITAS DEVICE --- */
-        @media (max-width: 992px) {
-            .top-grid { grid-template-columns: 1fr; }
-            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-            .photo-frame { max-width: 250px; margin: 0 auto; }
-        }
-
-        @media (max-width: 768px) {
-            .container { padding: 0 1.25rem; }
-            .nav-links { display: none; }
-            #digital-clock { font-size: 2.5rem; }
-            .carousel-btn { display: none; }
-            .grid-container-scroll { padding: 0.5rem 5px; }
-            .scroll-hint { display: block; }
-        }
-
-        /* --- SECTION JURNAL KELAS (BARU) --- */
+        /* --- SECTION JURNAL KELAS --- */
         .jurnal-grid-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -565,7 +534,6 @@
             gap: 0.6rem;
         }
 
-        /* Variasi warna ikon header tingkatan kelas */
         .jurnal-column-card:nth-child(1) h3 i { color: var(--accent-purple); }
         .jurnal-column-card:nth-child(2) h3 i { color: var(--accent-green); }
         .jurnal-column-card:nth-child(3) h3 i { color: var(--accent-orange); }
@@ -597,7 +565,6 @@
             transition: transform 0.2s ease, color 0.2s ease;
         }
 
-        /* Efek Hover Keren */
         .jurnal-item-btn:hover {
             transform: translateY(-2px);
             border-color: var(--accent-purple);
@@ -610,37 +577,10 @@
             transform: translateX(4px);
         }
 
-        /* Responsif untuk HP (Menjadi 1 Kolom jika layar kecil) */
-        @media (max-width: 992px) {
-            .jurnal-grid-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-        }
-
-        /* --- TRIK SMART ZOOM JADWAL UNTUK LAYAR HP --- */
-        @media (max-width: 768px) {
-            .table-wrapper-large {
-                padding: 0.5rem;
-                overflow-x: auto; /* Mengaktifkan scroll jika masih ada sisa */
-                display: block;   /* Mengubah flexbox menjadi block agar scroll lancar */
-            }
-            
-            .embed-responsive-container {
-                width: 100%;
-                overflow: hidden;
-            }
-
-            .table-wrapper-large iframe {
-                /* Memaksa Google Sheet mengecil agar muat di layar HP */
-                width: 140% !important; 
-                min-width: 140% !important;
-                transform: scale(0.7); /* MEMBUAT EFEK ZOOM OUT INTERNAL 70% */
-                transform-origin: top left; /* Mengunci posisi di pojok kiri atas */
-                height: 700px; /* Menambah tinggi kompensasi akibat efek scale */
-                margin-bottom: -210px; /* Memotong sisa space kosong akibat scale */
-            }
-        }
+        /* CATATAN PERUBAHAN: 
+           Semua bagian "@media (max-width: ...)" yang merombak susunan layout 
+           dan menyembunyikan komponen untuk layar HP telah DIHAPUS.
+        */
     </style>
 </head>
 <body>
@@ -769,7 +709,6 @@
                     </iframe>
                 </div>
             </div>
-            <div class="scroll-hint"><i class="fa-solid fa-hand-pointer"></i> Geser ke samping untuk melihat hari Jumat</div>
         </div>
     </section>
 
@@ -835,23 +774,20 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 @Adeveloper. Dashboard System V.1.1.</p>
+            <p>© 2025 @Adeveloper. Dashboard System V.1.1.</p>
         </div>
     </footer>
 
     <script>
         // Clock
-        // Fungsi Update Jam dan Tanggal Otomatis
         function runClock() {
             const time = new Date();
             
-            // 1. Logika Pengolah Waktu (Jam, Menit, Detik)
             const hh = String(time.getHours()).padStart(2, '0');
             const mm = String(time.getMinutes()).padStart(2, '0');
             const ss = String(time.getSeconds()).padStart(2, '0');
             document.getElementById('digital-clock').innerText = `${hh} : ${mm} : ${ss}`;
             
-            // 2. Logika Pengolah Tanggal Indonesia
             const daftarHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const daftarBulan = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             
@@ -860,7 +796,6 @@
             const bulan = daftarBulan[time.getMonth()];
             const tahun = time.getFullYear();
             
-            // Gabungkan menjadi format teks
             document.getElementById('digital-date').innerText = `${hari}, ${tanggal} ${bulan} ${tahun}`;
         }
         setInterval(runClock, 1000);
@@ -914,8 +849,6 @@
         // --- LOGIKA MEMANGGIL DATA SPREADSHEET CATATAN ---
         function loadCatatanFromSheet() {
             const tbody = document.getElementById('body-catatan');
-            
-            // GANTI DENGAN URL WEB APP GAS ANDA YANG BARU DI SINI
             const gasUrl = "https://script.google.com/macros/s/AKfycby38C4t4uXObrY8UG6V9pp_guEwtBQmgUEOV8bZ82vnaOdMX1NyMdjukPnR6nXvLcD5og/exec";
 
             fetch(gasUrl)
@@ -954,12 +887,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', loadCatatanFromSheet);
-
-        // Jalankan fungsi saat halaman web pertama kali dibuka
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCatatanFromSheet();
-            // Anda juga bisa menjalankan fungsi jam atau carousel Anda di sini
-        });
     </script>
 </body>
 </html>
