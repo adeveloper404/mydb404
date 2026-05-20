@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adeveloper - My Dashboard</title>
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1tb7sFpCdE-jivYf4audtkAOg98paEctJ" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1tb7sFpCdE-jivYf4audtkAOg98paEctJ">
     <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1tb7sFpCdE-jivYf4audtkAOg98paEctJ">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +22,7 @@
             --accent-purple: #6366f1;     /* Tema Foundation */
             --accent-green: #10b981;      /* Tema Builder */
             --accent-orange: #f59e0b;     /* Tema Specialist */
+            --accent-red: rgb(233, 44, 44);     /* red Specialist */
             --border-color: rgba(255, 255, 255, 0.08);
             --shadow: rgba(0, 0, 0, 0.4);
             --table-header-bg: #1e293b;
@@ -37,7 +38,8 @@
             --text-muted: #475569;        /* Teks pendukung lebih kontras (Slate-600) */
             --accent-purple: #4f46e5;     
             --accent-green: #059669;      
-            --accent-orange: #d97706;     
+            --accent-orange: #d97706;
+            --accent-red: rgb(233, 44, 44);  /* red Specialist */     
             --border-color: rgba(15, 23, 42, 0.12); /* Border lebih tegas */
             --shadow: rgba(15, 23, 42, 0.08);       /* Bayangan card lebih lembut tapi nyata */
             --table-header-bg: #f8fafc;
@@ -913,30 +915,30 @@
         function loadCatatanFromSheet() {
             const tbody = document.getElementById('body-catatan');
             
-            // Memanggil fungsi Backend getCatatanData() yang ada di Kode.gs
-            google.script.run
-                .withSuccessHandler(function(data) {
-                    // Kosongkan tulisan "Memuat data..."
+            // GANTI DENGAN URL WEB APP GAS ANDA YANG BARU DI SINI
+            const gasUrl = "https://script.google.com/macros/s/AKfycby38C4t4uXObrY8UG6V9pp_guEwtBQmgUEOV8bZ82vnaOdMX1NyMdjukPnR6nXvLcD5og/exec";
+
+            fetch(gasUrl)
+                .then(response => response.json())
+                .then(data => {
                     tbody.innerHTML = '';
-                    
                     if (!data || data.length === 0) {
                         tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--text-muted);">Tidak ada catatan.</td></tr>';
                         return;
                     }
                     
-                    // Looping data dari Google Sheet ke dalam baris tabel
                     data.forEach(item => {
                         const tr = document.createElement('tr');
-                        
-                        // Logika pewarnaan otomatis berdasarkan kata status
-                        let statusStyle = 'color: var(--text-muted); font-weight:600;'; // Default abu-abu
+                        let statusStyle = 'color: var(--text-muted); font-weight:600;';
                         const statusLower = item.status.toString().toLowerCase();
                         
                         if (statusLower === 'done') {
                             statusStyle = 'color: var(--accent-green); font-weight:600;';
-                        } else if (statusLower === 'pending' || statusLower === 'proses') {
+                        } else if (statusLower === 'proses') {
+                            statusStyle = 'color: var(--accent-red); font-weight:600;';
+                        }else if (statusLower === 'pending') {
                             statusStyle = 'color: var(--accent-orange); font-weight:600;';
-                        }
+                        }  
                         
                         tr.innerHTML = `
                             <td>${item.agenda}</td>
@@ -945,12 +947,13 @@
                         tbody.appendChild(tr);
                     });
                 })
-                .withFailureHandler(function(error) {
+                .catch(error => {
                     tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: red;">Gagal memuat data.</td></tr>';
-                    console.error('Error GAS:', error);
-                })
-                .getCatatanData();
+                    console.error('Error:', error);
+                });
         }
+
+        document.addEventListener('DOMContentLoaded', loadCatatanFromSheet);
 
         // Jalankan fungsi saat halaman web pertama kali dibuka
         document.addEventListener('DOMContentLoaded', () => {
